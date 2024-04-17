@@ -4,10 +4,11 @@ import * as Yup from 'yup';
 import { Formik } from "formik";
 import axios, { HttpStatusCode } from "axios";
 
-import { PrimaryButton, PrimaryInput } from "../../../components";
+import { FormError, PrimaryButton, PrimaryInput } from "../../../components";
 import LocalStorage from "../../../core/service/local-storage/local.storage.service";
 import { LocalStorageSaveKeys } from "../../../constants";
 import { useNavigation } from "@react-navigation/native";
+import { LoginService } from "../../../core";
 
 const SignIn = () => {
     const [loading, setLoading] = useState(false)
@@ -22,34 +23,22 @@ const SignIn = () => {
             .required('Required'),
     });
 
-    async function handleSubmit(nickname: string, password: string) {
+    const handleSubmit = async (values: any) => {
         setLoading(true);
         try {
-            axios.post('https://fakestoreapi.com/auth/login', {
-                username: nickname,
-                password: password,
-            })
-                .then(response => {
-                    switch (response.status) {
-                        case HttpStatusCode.Ok:
-                            localStorage.save(LocalStorageSaveKeys.nickname, nickname);
-                            localStorage.save(LocalStorageSaveKeys.password, password);
-                            console.log('Girdin Kral Hadi Bakim');
-                            navigation.navigate('Home')
-                            break;
-                    }
-                    setLoading(false);
-                })
-                .catch(error => {
-                    if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
-                        setServiceErrorText('Kullanıcı adı veya parola hatalı.');
-                    } else {
-                        setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.');
-                    }
-                    setLoading(false);
-                });
-        } catch (error) {
-            setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.')
+            const response = await LoginService(values.nickname, values.password); // API servisini kullan
+            localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
+            localStorage.save(LocalStorageSaveKeys.password, values.password);
+            console.log('Girdin Kral Hadi Bakim');
+            navigation.navigate('Home');
+        } catch (error: any) {
+            if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
+                setServiceErrorText('Kullanıcı adı veya parola hatalı.');
+            } else {
+                setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.');
+            }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -63,7 +52,7 @@ const SignIn = () => {
             <Formik
                 validationSchema={SignupSchema}
                 initialValues={{ nickname: 'mor_2314', password: '83r5^_', }}
-                onSubmit={values => handleSubmit(values.nickname, values.password)}
+                onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <View className="p-5">
@@ -101,8 +90,3 @@ const SignIn = () => {
 }
 
 export default SignIn;
-
-
-const FormError: React.FC<{ error: string }> = ({ error }) => {
-    return <Text className="my-2 text-red-800 font-medium">{error}</Text>
-}
