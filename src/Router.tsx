@@ -4,6 +4,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthStack } from './stack';
+import { Home } from './pages';
 
 
 const Stack = createNativeStackNavigator();
@@ -13,6 +14,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Auth'>
         <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Home} options={{ headerBackVisible: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
