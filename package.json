@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
+    "axios": "^1.6.8",
     "formik": "^2.4.5",
     "i18next": "^23.11.2",
     "nativewind": "^2.0.11",
