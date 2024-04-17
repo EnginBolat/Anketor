@@ -26,10 +26,9 @@ const SignIn = () => {
     const handleSubmit = async (values: any) => {
         setLoading(true);
         try {
-            const response = await LoginService(values.nickname, values.password); // API servisini kullan
+            await LoginService(values.nickname, values.password); // API servisini kullan
             localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
             localStorage.save(LocalStorageSaveKeys.password, values.password);
-            console.log('Girdin Kral Hadi Bakim');
             navigation.navigate('Home');
         } catch (error: any) {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
