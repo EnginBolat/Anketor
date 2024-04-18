@@ -26,7 +26,7 @@ const SignIn = () => {
     const handleSubmit = async (values: any) => {
         setLoading(true);
         try {
-            await LoginService(values.nickname, values.password); // API servisini kullan
+            await LoginService(values.nickname, values.password);
             localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
             localStorage.save(LocalStorageSaveKeys.password, values.password);
             navigation.navigate('Home');
@@ -41,13 +41,12 @@ const SignIn = () => {
         }
     }
 
-    async function handleNavigationToSignIn() {
-        Alert.alert(`Navigation...`)
+    async function handleForgetPassword() {
+        navigation.navigate('ForgotPasswordPage')
     }
 
-    return <SafeAreaView className="flex flex-1 p-5">
-        <View className="flex flex-1 justify-center">
-            <Text className="justify-start items-center font-semibold text-2xl mb-2 px-5">Hoşgeldiniz</Text>
+    return <SafeAreaView className="flex p-5">
+        <View className="flex justify-center">
             <Formik
                 validationSchema={SignupSchema}
                 initialValues={{ nickname: 'mor_2314', password: '83r5^_', }}
@@ -67,7 +66,13 @@ const SignIn = () => {
                             placeholder="Password"
                             secureTextEnty={true}
                         />
-                        {errors.password && touched.password ? (<FormError error={errors.password} />) : null}
+                        <View className="w-full justify-between flex-row items-center">
+                            {errors.password && touched.password ? (<FormError error={errors.password} />) : <View />}
+
+                            <TouchableOpacity onPress={handleForgetPassword} className={`${errors.password ? 'py-0' : 'p-2'}`}>
+                                <Text className="underline text-gray-600">Şifremi Unuttum</Text>
+                            </TouchableOpacity>
+                        </View>
                         <PrimaryButton
                             title="Giriş Yap"
                             onPress={handleSubmit}
@@ -75,12 +80,6 @@ const SignIn = () => {
                             titleStyle={{ fontWeight: '600' }}
                         />
                         <FormError error={serviceError} />
-                        <View className="w-full flex-row mt-4 justify-center items-center">
-                            <Text>Üye Değil misiniz?</Text>
-                            <TouchableOpacity onPress={handleNavigationToSignIn}>
-                                <Text className="font-semibold"> Hesap Oluştur</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 )}
             </Formik>
