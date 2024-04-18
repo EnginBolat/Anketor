@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View, Dimensions } from "react-native";
 import * as Yup from 'yup';
 import { Formik } from "formik";
 
@@ -8,14 +8,19 @@ import { LocalStorage, LoginService } from "../../../core";
 import { LocalStorageSaveKeys } from "../../../constants";
 import { HttpStatusCode } from "axios";
 import DatePicker from "react-native-date-picker";
+import { IcMale } from "../../../assets";
+import { useNavigation } from "@react-navigation/native";
 
 const SignUp = () => {
+    const { height, width } = Dimensions.get('window');
     const [loading, setLoading] = useState(false)
     const [serviceError, setServiceErrorText] = useState('')
     const localStorage = new LocalStorage();
     const [date, setDate] = useState(new Date());
     const [dateString, setDateString] = useState('December 18, 1980');
     const [openPicker, setOpenPicker] = useState(false);
+    const [selectedGender, setselectedGender] = useState('');
+    const navigation = useNavigation<any>();
 
     const SignupSchema = Yup.object().shape({
         nickname: Yup.string()
@@ -34,8 +39,9 @@ const SignUp = () => {
             if (!response) {
                 localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
                 localStorage.save(LocalStorageSaveKeys.password, values.password);
+                navigation.navigate('KvkkPage');
             } else {
-                setServiceErrorText('Kullanıcı Önceden Kayıtlı!');
+                setServiceErrorText('Kullanıcı Adı Önceden Kayıtlı!');
             }
         } catch (error: any) {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
@@ -60,6 +66,25 @@ const SignUp = () => {
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <View className="p-5">
+                        <View className="w-full justify-between flex-row mb-2">
+                            <View style={{ width: width * 0.45 }}>
+                                <PrimaryButton onPress={() => { setselectedGender('Woman') }}
+                                    title="Kadın"
+                                    isWhite={true}
+                                    style={selectedGender == "Woman" ? { backgroundColor: 'pink' } : { backgroundColor: 'white' }}
+                                    titleStyle={selectedGender == "Woman" ? { color: 'white' } : { color: 'black' }}
+                                />
+                            </View>
+                            <View style={{ width: width * 0.45 }}>
+                                <PrimaryButton onPress={() => { setselectedGender('Man') }}
+                                    title="Erkek"
+                                    isWhite={true}
+                                    style={selectedGender == "Man" ? { backgroundColor: '#4aabff' } : { backgroundColor: 'white' }}
+                                    titleStyle={selectedGender == "Man" ? { color: 'white' } : { color: 'black' }}
+                                />
+
+                            </View>
+                        </View>
                         <PrimaryInput
                             value={values.nickname}
                             setValue={handleChange('nickname')}
