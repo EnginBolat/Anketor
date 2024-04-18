@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { AuthStack } from './stack';
 import { Home, Profile, QuestionPage } from './pages';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IcHome, IcUser } from './assets';
 
 
@@ -41,20 +43,22 @@ function HomeTab() {
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={HomeTab} options={{ headerShown: false }} />
-        <Stack.Screen name="Question"
-          component={QuestionPage}
-          options={{
-            headerTitle: '',
-            headerBackTitleVisible: false,
-            headerTintColor: 'black'
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Home'>
+          <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />
+          <Stack.Screen name="Home" component={HomeTab} options={{ headerShown: false }} />
+          <Stack.Screen name="Question"
+            component={QuestionPage}
+            options={{
+              headerTitle: '',
+              headerBackTitleVisible: false,
+              headerTintColor: 'black'
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 

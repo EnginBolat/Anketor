@@ -4,6 +4,8 @@ import { View, Text, FlatList, StatusBar, Dimensions, TouchableOpacity, TextInpu
 import questions from '../../utils/questions.json';
 import { PrimaryButton, PrimaryInput } from '../../components';
 import { MultipleChoiceQuestionModel, MultipleChoiceQuestionSaveModel, ScaleQuestionModel, OpenEndedQuestionModel } from '../../model';
+import { Slider } from 'react-native-awesome-slider';
+import { useSharedValue } from 'react-native-reanimated';
 
 const QuestionPage = () => {
     const { height, width } = Dimensions.get('window');
@@ -154,11 +156,6 @@ const MultipleChoicePage: React.FC<{
 const OpenEndedQuestionPage: React.FC<{ question2: OpenEndedQuestionModel, handleAnswer: (answer: string) => void }> = ({ question2, handleAnswer }) => {
     const [answer, setAnswer] = useState('');
 
-    const handleNextButton = () => {
-        // Do any validation or processing of the answer here if needed
-        handleAnswer(answer);
-    };
-
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', padding: 20, width: Dimensions.get('window').width }}>
             <Text className='font-semibold text-lg text-center mb-5'>{question2.question}</Text>
@@ -174,12 +171,47 @@ const OpenEndedQuestionPage: React.FC<{ question2: OpenEndedQuestionModel, handl
 
 
 const ScaleQuestionPage: React.FC<{ question2: ScaleQuestionModel, handleAnswer: (answer: string) => void }> = ({ question2, handleAnswer }) => {
+    const [disable, setDisable] = useState(false);
+
+    const progress = useSharedValue(3);
+    const thumbScaleValue = useSharedValue(1);
+    const min = useSharedValue(0);
+    const max = useSharedValue(5);
+    const cache = useSharedValue(0);
+    const isScrubbing = useRef(true);
+
+    const onSlidingComplete = (e: number) => {
+        console.log('onSlidingComplete', parseInt(e.toString(), 10));
+        isScrubbing.current = false;
+    };
+
+    const onSlidingStart = () => {
+        console.log('onSlidingStart');
+        isScrubbing.current = true;
+    };
+
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', padding: 20, width: Dimensions.get('window').width }}>
-            <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
-            <Text>{question2.question}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            </View>
+        <View className='flex flex-1 justify-center items-center bg-white p-5' style={{width:Dimensions.get('window').width}}>
+            <Text className='font-semibold text-lg text-center mb-5'>{question2.question}</Text>
+            <Slider
+                theme={{
+                    disableMinTrackTintColor: '#fff',
+                    maximumTrackTintColor: 'rgba(0,0,0,0.10)',
+                    minimumTrackTintColor: '#000',
+                    cacheTrackTintColor: '#333',
+                    bubbleBackgroundColor: '#666',
+                    heartbeatColor: '#999',
+                }}
+                style={{ width: "100%" }}
+                progress={progress}
+                onSlidingComplete={onSlidingComplete}
+                onSlidingStart={onSlidingStart}
+                minimumValue={min}
+                maximumValue={max}
+                disable={disable}
+                cache={cache}
+                thumbScaleValue={thumbScaleValue}
+            />
         </View >
     );
 };
