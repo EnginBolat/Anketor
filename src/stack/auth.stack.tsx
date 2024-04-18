@@ -1,25 +1,29 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { SignIn, SignUp } from '../pages';
+import { Auth, ForgotPassword } from '../pages';
 
 const AboutStack = createNativeStackNavigator();
 
 function AboutStackScreen() {
     return <AboutStack.Navigator
-        initialRouteName="SignIn"
+        initialRouteName="AuthPage"
         screenOptions={{ headerTitleAlign: 'center' }}>
         <AboutStack.Screen
-            name="SignIn"
-            component={SignIn}
+            name="AuthPage"
+            component={Auth}
             options={{
                 headerShown: false,
             }}
         />
         <AboutStack.Screen
-            name='SignUp'
-            component={SignUp}
+            name='ForgotPasswordPage'
+            component={ForgotPassword}
             options={{
-                headerShown: false,
+                headerShown: true,
+                title: '',
+                headerBackTitleVisible: false,
+                headerTintColor: 'black',
+                headerTransparent: true,
             }}
         />
     </AboutStack.Navigator >
