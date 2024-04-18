@@ -1,0 +1,105 @@
+[
+    {
+        "id": 1,
+        "question": "Günlük olarak kaç saat uyuyorsunuz?",
+        "questionType": "multiple_choice",
+        "answers": [
+            "3 saat veya daha az",
+            "6 saat",
+            "7-8 saat",
+            "9 saat veya daha fazla"
+        ],
+        "correctAnswer": "7-8 saat"
+    },
+    {
+        "id": 2,
+        "question": "Günlük olarak kaç bardak su içiyorsunuz?",
+        "questionType": "multiple_choice",
+        "answers": [
+            "0-1 bardak",
+            "2-3 bardak",
+            "4-5 bardak",
+            "6 veya daha fazla bardak"
+        ],
+        "correctAnswer": "2-3 bardak"
+    },
+    {
+        "id": 3,
+        "question": "Fiziksel aktivite yapma sıklığınız nedir?",
+        "questionType": "multiple_choice",
+        "answers": [
+            "Haftada hiç yapmıyorum",
+            "Haftada 1-2 gün",
+            "Haftada 3-4 gün",
+            "Haftada 5 veya daha fazla gün"
+        ],
+        "correctAnswer": "Haftada 3-4 gün"
+    },
+    {
+        "id": 4,
+        "question": "Günlük olarak kaç porsiyon meyve ve sebze tüketiyorsunuz?",
+        "questionType": "multiple_choice",
+        "answers": [
+            "Hiç tüketmiyorum",
+            "1-2 porsiyon",
+            "3-4 porsiyon",
+            "5 veya daha fazla porsiyon"
+        ],
+        "correctAnswer": "3-4 porsiyon"
+    },
+    {
+        "id": 5,
+        "question": "Stres yönetimi konusunda kendinizi nasıl değerlendirirsiniz?",
+        "questionType": "scale",
+        "scale": {
+            "min": 1,
+            "max": 5,
+            "label_left": "Çok kötü",
+            "label_right": "Çok iyi"
+        },
+        "correctAnswer": ""
+    },
+    {
+        "id": 6,
+        "question": "İş yerindeki çalışma ortamından memnun musunuz?",
+        "questionType": "scale",
+        "scale": {
+            "min": 1,
+            "max": 5,
+            "label_left": "Hiç memnun değilim",
+            "label_right": "Çok memnunum"
+        },
+        "correctAnswer": ""
+    },
+    {
+        "id": 7,
+        "question": "Sağlıklı beslenme alışkanlıklarınızı değerlendirin.",
+        "questionType": "open-ended",
+        "correctAnswer": ""
+    },
+    {
+        "id": 8,
+        "question": "Daha iyi bir yaşam tarzı için ne gibi değişiklikler yapmayı düşünüyorsunuz?",
+        "questionType": "open-ended",
+        "correctAnswer": ""
+    },
+    {
+        "id": 9,
+        "question": "Hangi konuda daha fazla bilgi almak istersiniz?",
+        "questionType": "open-ended",
+        "correctAnswer": ""
+    },
+    {
+        "id": 10,
+        "question": "Son bir haftadaki genel ruh haliniz nasıldı?",
+        "questionType": "multiple_choice",
+        "answers": [
+            "Çok mutsuz",
+            "Mutsuz",
+            "Normal",
+            "Mutlu",
+            "Çok mutlu"
+        ],
+        "correctAnswer": "Normal"
+    }
+]

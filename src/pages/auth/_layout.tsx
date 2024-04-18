@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { SegmentedControl } from "../../components/container/SegmentedControl";
+import { Text, View } from "react-native";
 import { SignIn } from "./sign-in";
 import { SignUp } from "./sign-up";
+import { SegmentedControl } from "../../components";
 
 const Auth = () => {
     const [selectedOption, setselectedOption] = useState('Giriş Yap');
