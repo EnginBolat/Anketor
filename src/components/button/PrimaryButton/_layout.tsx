@@ -18,7 +18,7 @@ const PrimaryButton: React.FC<{
     isWhite = false,
     LeadingIcon,
 }) => {
-        return <TouchableOpacity onPress={onPress} style={style} className={`w-full ${isWhite ? 'bg-white' : 'bg-black'} py-5 px-4 rounded-xl items-center justify-center`}>
+        return <TouchableOpacity onPress={onPress} style={style} className={`w-full ${isWhite ? 'bg-white' : 'bg-black'} py-5 px-4 rounded-xl items-center justify-center border border-gray-200`}>
             {!isLoading && <View className="flex-row">
                 {LeadingIcon && <LeadingIcon />}
                 <Text className={`${!isWhite ? 'text-white' : 'text-black'}`} style={titleStyle}>{title}</Text></View>}
