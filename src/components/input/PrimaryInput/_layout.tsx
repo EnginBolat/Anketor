@@ -8,17 +8,20 @@ const PrimaryInput: React.FC<{
     placeholder: string;
     secureTextEnty?: boolean;
     onEndEditing?: any;
+    maxLength?: number;
 }> = ({
     value,
     setValue,
     placeholder,
     secureTextEnty = false,
     onEndEditing,
+    maxLength
 }) => {
         const [isSecureText, setIsSecureText] = useState(true)
 
         return <View className={`${secureTextEnty ? "px-6" : "px-3"} bg-white  py-5 w-full flex-row justify-center items-center rounded-lg border border-gray-400 my-2`}>
             <TextInput
+                maxLength={maxLength}
                 className="w-full"
                 value={value}
                 placeholder={placeholder}
