@@ -1,0 +1,1 @@
+export { default as Kvkk } from './_layout';
