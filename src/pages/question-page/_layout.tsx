@@ -1,17 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, FlatList, StatusBar, Dimensions, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, FlatList, StatusBar, Dimensions, TouchableOpacity, TextInput } from 'react-native';
+
 import questions from '../../utils/questions.json';
-import MultipleChoiceQuestionModel from '../../model/multiple.choice.question.model';
-import OpenEndedQuestionModel from '../../model/open.ended.question';
-import ScaleQuestionModel from '../../model/scale.question.model';
-import { PrimaryButton } from '../../components';
+import { PrimaryButton, PrimaryInput } from '../../components';
+import { MultipleChoiceQuestionModel, MultipleChoiceQuestionSaveModel, ScaleQuestionModel, OpenEndedQuestionModel } from '../../model';
 
 const QuestionPage = () => {
-    const { width } = Dimensions.get('window');
+    const { height, width } = Dimensions.get('window');
     const [activeIndex, setActiveIndex] = useState(0);
+    const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string }>({});
     const flatlistRef = useRef<FlatList>(null);
-    const navigation = useNavigation<any>();
 
     const handleNextButton = () => {
         if (activeIndex < questions.length - 1) {
@@ -28,23 +26,26 @@ const QuestionPage = () => {
     };
 
     const handleAnswer = (answer: string) => {
-        console.log('Seçilen cevap:', answer);
+        const questionId = questions[activeIndex].id;
+        setSelectedAnswers(prevState => ({ ...prevState, [questionId]: answer }));
         handleNextButton();
     };
 
+    const handleFinishButton = async () => {
+        console.log('Test bitirildi');
+        try {
+            // await AsyncStorage.setItem('selectedAnswers', JSON.stringify(selectedAnswers));
+            // Navigation or any other action after saving to localStorage
+        } catch (error) {
+            console.error('Error saving selected answers to AsyncStorage:', error);
+        }
+    };
+
+
     const renderIndicator = ({ index }: { index: number }) => (
-        <View style={{
-            height: 24,
-            width: 32,
-            borderRadius: 4,
-            backgroundColor:
-                index === activeIndex
-                    ? 'rgba(0,0,0,0.10)'
-                    : 'rgba(0,0,0,0.30)',
-            marginRight: 2,
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
+        <View
+            className={`h-6 w-8 rounded-md ${index === activeIndex ? 'bg-gray-100' : 'bg-gray-200'} mr-0.5 justify-center items-center`}
+        >
             <Text style={{ padding: 2 }}>{index + 1}</Text>
         </View>
     );
@@ -78,15 +79,21 @@ const QuestionPage = () => {
             />
             <View className='justify-between flex-row p-5'>
                 <PrimaryButton
-                    title='İleri'
-                    onPress={handleNextButton}
-                    style={{ width: Dimensions.get('window').width * 0.45 }}
-                />
-                <PrimaryButton
                     title='Geri'
                     onPress={handlePrevButton}
                     style={{ width: Dimensions.get('window').width * 0.45 }}
+                    isWhite={true}
                 />
+                <View className='mr-1' />
+                <PrimaryButton
+                    title={activeIndex >= 9 ? 'Bitir' : 'İler'}
+                    onPress={() => {
+                        activeIndex >= 9 ? handleFinishButton() : handleNextButton()
+                    }}
+                    style={{ width: Dimensions.get('window').width * 0.45 }}
+                    isWhite={true}
+                />
+
             </View>
             <View className='flex-row h-14' >
                 <FlatList
@@ -112,6 +119,13 @@ const MultipleChoicePage: React.FC<{
     question2,
     handleAnswer
 }) => {
+        const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+        const handleSelectAnswer = (answer: string) => {
+            setSelectedAnswer(answer);
+            handleAnswer(answer);
+        };
+
         const groupedAnswers = [];
         for (let i = 0; i < question2.answers.length; i += 2) {
             groupedAnswers.push(question2.answers.slice(i, i + 2));
@@ -125,9 +139,10 @@ const MultipleChoicePage: React.FC<{
                         <TouchableOpacity
                             className='justify-center items-center my-2 px-3 rounded-xl py-3 bg-white border border-gray-200 flex h-14'
                             key={index}
-                            onPress={() => handleAnswer(answer)}
+                            onPress={() => handleSelectAnswer(answer)}
+                            style={selectedAnswer === answer ? { backgroundColor: 'green' } : null}
                         >
-                            <Text>{answer}</Text>
+                            <Text className={`${selectedAnswer === answer ? 'text-white' : 'text-black'}`}>{answer}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -137,13 +152,23 @@ const MultipleChoicePage: React.FC<{
 
 
 const OpenEndedQuestionPage: React.FC<{ question2: OpenEndedQuestionModel, handleAnswer: (answer: string) => void }> = ({ question2, handleAnswer }) => {
+    const [answer, setAnswer] = useState('');
+
+    const handleNextButton = () => {
+        // Do any validation or processing of the answer here if needed
+        handleAnswer(answer);
+    };
+
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', padding: 20, width: Dimensions.get('window').width }}>
-            <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
-            <Text>{question2.question}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            </View>
-        </View >
+            <Text className='font-semibold text-lg text-center mb-5'>{question2.question}</Text>
+            <PrimaryInput
+                placeholder='Cevabınızı buraya yazın'
+                setValue={(text: any) => setAnswer(text)}
+                value={answer}
+                maxLength={200}
+            />
+        </View>
     );
 };
 
