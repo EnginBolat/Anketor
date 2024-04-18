@@ -16,7 +16,7 @@ export const LoginService = async (nickname: string, password: string) => {
             password: password,
         });
         return response.data;
-    } catch (error) {
-        throw error;
+    } catch (error: any) {
+        return error.statusCode;
     }
 };
