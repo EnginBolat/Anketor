@@ -16,9 +16,10 @@ const PrimaryInput: React.FC<{
     onEndEditing,
 }) => {
         const [isSecureText, setIsSecureText] = useState(true)
-        return <View className={`${secureTextEnty ? "px-6" : "px-3"} py-5 w-full flex-row justify-center items-center rounded-lg border border-gray-400 my-2`}>
+
+        return <View className={`${secureTextEnty ? "px-6" : "px-3"} bg-white  py-5 w-full flex-row justify-center items-center rounded-lg border border-gray-400 my-2`}>
             <TextInput
-                className="w-full "
+                className="w-full"
                 value={value}
                 placeholder={placeholder}
                 secureTextEntry={secureTextEnty ? isSecureText : false}
