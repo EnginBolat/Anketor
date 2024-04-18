@@ -1,0 +1,1 @@
+export { default as AnketCard } from './_layout';
