@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { IcCalendar, IcClock } from "../../../assets";
 
-const AnketCard: React.FC<{ title: string, date: string, time: string, onPress: () => void, testId?: string }> = ({
+const AnketCard: React.FC<{ title: string, date?: string, time?: string, onPress: () => void, testId?: string }> = ({
     title,
     date,
     time,
@@ -15,10 +15,14 @@ const AnketCard: React.FC<{ title: string, date: string, time: string, onPress: 
             <Text className="text-gray-400 text-xs underline">Daha Fazla</Text>
         </View>
         <View className="flex-row mt-2 items-center">
-            <IcCalendar height={18} width={18} />
-            <Text className="ml-1 mr-2">{date}</Text>
-            <IcClock height={18} width={18} />
-            <Text className="ml-1">{time}</Text>
+            {date && <View className="flex-row ">
+                <IcCalendar height={18} width={18} />
+                <Text className="ml-1 mr-2">{date}</Text>
+            </View>}
+            {time && <View className="flex-row ">
+                <IcClock height={18} width={18} />
+                <Text className="ml-1">{time}</Text>
+            </View>}
         </View>
     </TouchableOpacity>
 }
