@@ -1,9 +1,44 @@
-import React from "react";
-import { FlatList, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { IcCalendar, IcClock } from "../../assets";
+import React, { useEffect, useState } from "react";
+import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { AnketCard } from "../../components";
+import { useNavigation } from "@react-navigation/native";
+import { LocalStorage } from "../../core";
+import { LocalStorageSaveKeys } from "../../constants";
+import questions from '../../utils/questions.json';
+
 
 const Profile = () => {
+    const localStorage = new LocalStorage();
+    const navigation = useNavigation<any>();
+    const [finishedQuestionsId, setFinishedQuestionsId] = useState<string[]>([]);
+
+    useEffect(() => {
+        const storedFinishedQuestionsId = localStorage.get(LocalStorageSaveKeys.finishedQuestionsId);
+        if (storedFinishedQuestionsId) {
+            setFinishedQuestionsId(storedFinishedQuestionsId);
+        }
+    }, []);
+
+    useEffect(() => {
+        navigation.addListener('focus', () => {
+            const storedFinishedQuestionsId = localStorage.get(LocalStorageSaveKeys.finishedQuestionsId);
+            if (storedFinishedQuestionsId) {
+                setFinishedQuestionsId(storedFinishedQuestionsId);
+            }
+        });
+    }, [navigation]);
+
+    const filterQuestionsById = (questions: any) => {
+        return questions.filter((question: any) => {
+            for (const id of finishedQuestionsId) {
+                if (question.id === id) {
+                    console.log(question.id);
+                    return true;
+                }
+            }
+            return false;
+        });
+    };
     return <SafeAreaView className="flex flex-1">
         <ScrollView showsVerticalScrollIndicator={false}>
             <View className="flex flex-1 p-5">
@@ -15,18 +50,19 @@ const Profile = () => {
                     <InformationCol title="Bugün" value="2" />
                 </View>
                 <FlatList
+                    className="flex flex-1"
                     showsVerticalScrollIndicator={false}
-                    scrollEnabled={false}
-                    data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                    scrollEnabled={true}
+                    data={finishedQuestionsId ? filterQuestionsById(questions) : questions}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={(item) => {
-                        return <AnketCard
-                            title={`Anket ${item.index + 1}`}
-                            time="11:22"
-                            date="18.04.2024"
-                            onPress={() => { console.log(`Id:${item.index + 1}`); }}
+                    renderItem={({ item }) => (
+                        <AnketCard
+                            title={item.title}
+                            time={item.createdDate}
+                            date={item.createdDate}
+                            onPress={() => { navigation.navigate('Question', { testId: item.id }) }}
                         />
-                    }}
+                    )}
                 />
             </View>
         </ScrollView>
