@@ -5,6 +5,7 @@ enum LocalStorageSaveKeys {
     gender = 'gender',
     password = 'password',
     anketCounter = 'anketCounter',
+    finishedQuestionsId = 'finishedQuestionsId',
 }
 
 export default LocalStorageSaveKeys;
