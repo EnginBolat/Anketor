@@ -5,3 +5,4 @@ export { default as IcHome } from './ic_home.svg';
 export { default as IcUser } from './ic_user.svg';
 export { default as IcCalendar } from './ic_calendar.svg';
 export { default as IcClock } from './ic_clock.svg';
+export { default as IcStar } from './ic_star.svg';
