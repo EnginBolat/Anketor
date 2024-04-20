@@ -22,8 +22,7 @@ const QuestionPage = (props: any) => {
     const navigation = useNavigation<any>();
     const route = useRoute();
     const { testId } = route.params as RouteParams;
-    console.log(testId);
-
+    var mainQuestion = questions.filter((x: any) => x.id === Number(testId))
 
     const [seconds, setSeconds] = useState(0);
     const [minutes, setMinutes] = useState(0);
@@ -71,7 +70,7 @@ const QuestionPage = (props: any) => {
     const flatlistRef = useRef<FlatList>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const handleNextButton = () => {
-        if (activeIndex < questions[0].quesions.length - 1) {
+        if (activeIndex < mainQuestion[0].quesions.length - 1) {
             const nextIndex = activeIndex + 1;
             setActiveIndex(nextIndex);
             flatlistRef.current?.scrollToIndex({ animated: true, index: nextIndex });
@@ -87,33 +86,54 @@ const QuestionPage = (props: any) => {
     };
 
     const handleAnswer = (answer: string) => {
-        const questionId = questions[0].quesions[activeIndex].id;
+        console.log(answer);
+        const questionId = mainQuestion[0].quesions[activeIndex].id;
         setSelectedAnswers(prevState => ({ ...prevState, [questionId]: answer }));
         handleNextButton();
     };
 
     const handleFinishButton = () => {
         try {
+            // Timer'ı Durdur
+            setIsRunning(prevState => !prevState);
+
+            // Kaydedilecek verinin modelini oluştur
+            var random = (Math.floor(Math.random() * (100 - 50 + 1)) + 50).toString();
+            var point = random.toString();
             const saveModels: SaveAnswersModel[] = Object.entries(selectedAnswers).map(([questionId, answer]) => ({
                 questionId: parseInt(questionId),
+                title: questions.filter((x) => x.id === testId)[0].title,
                 answers: answer,
                 totalTime: `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`,
                 createdDate: new Date().toISOString(),
-                updatedDate: new Date().toString()
+                updatedDate: new Date().toString(),
+                averagePoint: point,
+                test: mainQuestion
             }));
+
+            console.log(`Model Preview: ${saveModels}`)
+
+            // Kaydedilen Testin Idsini kaydet
             var idList = localStorage.get(LocalStorageSaveKeys.finishedQuestionsId);
             if (!idList) { idList = []; }
             idList.push(testId)
             localStorage.save(LocalStorageSaveKeys.finishedQuestionsId, idList)
-            const filteredQuestions = questions.filter((x) => x.id === testId);
-            const filteredQuestionTitle = filteredQuestions[0].title;
-            localStorage.saveModel(filteredQuestionTitle, saveModels);
+
+            // Kaydedilen Testin Modelini Kaydet
+            localStorage.saveModel(questions.filter((x) => x.id === testId)[0].title, saveModels);
+            console.warn(`Veri tabanına kaydedilen başlık:${questions.filter((x) => x.id === testId)[0].title}`)
+            console.warn(`Veri tabanına kaydedilen içerik:${saveModels}`)
+
+            // Geliştiriciyi ve Kullanıcıyı bilgilendirecek logları göster
             console.log('Cevaplar başarıyla localStorage\'a kaydedildi.');
-            setIsRunning(prevState => !prevState);
             Alert.alert(`Cevaplarınız Kaydedildi\nToplam Geçen Süre: ${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`)
-            navigation.pop();
+
+            // Kayıt işlemi başarılı ise sayfadan geri çık
+            // navigation.pop();
         } catch (error) {
+            // Geliştiriciyi ve Kullanıcıyı bilgilendirecek logları göster
             console.error('LocalStorage\'a cevapları kaydetme hatası:', error);
+            Alert.alert(`Cevaplarınız Kaydedilirken bir sorun ile karşılaşıldı`)
         }
     };
 
@@ -136,7 +156,7 @@ const QuestionPage = (props: any) => {
                 pagingEnabled
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                data={questions[0].quesions}
+                data={mainQuestion[0].quesions}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }: { item: any }) => {
                     switch (item.questionType) {
@@ -174,7 +194,7 @@ const QuestionPage = (props: any) => {
                         flex: 1,
                     }}
                     horizontal
-                    data={questions[0].quesions}
+                    data={mainQuestion[0].quesions}
                     renderItem={renderIndicator}
                     keyExtractor={(_, index) => index.toString()}
                 />
