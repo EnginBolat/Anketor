@@ -6,6 +6,7 @@ interface SaveAnswersModel {
     createdDate: string;
     updatedDate: string;
     averagePoint: string;
+    test: any,
 }
 
 export default SaveAnswersModel;
