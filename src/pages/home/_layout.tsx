@@ -30,9 +30,10 @@ const Home = () => {
 
     const filterQuestionsById = (questions: any) => {
         return questions.filter((question: any) => {
+            var data = localStorage.get(question.title);
+            console.log(data);
             for (const id of finishedQuestionsId) {
                 if (question.id === id) {
-                    console.log(question.id);
                     return false;
                 }
             }
