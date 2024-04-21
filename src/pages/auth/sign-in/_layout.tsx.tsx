@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Alert, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from 'yup';
 import { Formik } from "formik";
-import axios, { HttpStatusCode } from "axios";
+import { HttpStatusCode } from "axios";
 
 import { FormError, PrimaryButton, PrimaryInput } from "../../../components";
 import LocalStorage from "../../../core/service/local-storage/local.storage.service";
@@ -49,7 +49,7 @@ const SignIn = () => {
         <View className="flex justify-center">
             <Formik
                 validationSchema={SignupSchema}
-                initialValues={{ nickname: 'mor_2314', password: '83r5^_', }}
+                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? 'mor_2314' : "", }}
                 onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (

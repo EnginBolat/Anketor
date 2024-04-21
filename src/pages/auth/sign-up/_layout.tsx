@@ -8,7 +8,6 @@ import { LocalStorage, LoginService } from "../../../core";
 import { LocalStorageSaveKeys } from "../../../constants";
 import { HttpStatusCode } from "axios";
 import DatePicker from "react-native-date-picker";
-import { IcMale } from "../../../assets";
 import { useNavigation } from "@react-navigation/native";
 
 const SignUp = () => {
@@ -47,7 +46,6 @@ const SignUp = () => {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
                 await LoginService(values.nickname, values.password);
                 localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
-                console.log('Hadik siktir git');
                 localStorage.save(LocalStorageSaveKeys.password, values.password);
             } else {
                 setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.');
@@ -61,7 +59,7 @@ const SignUp = () => {
         <View className="flex justify-center">
             <Formik
                 validationSchema={SignupSchema}
-                initialValues={{ nickname: 'mor_2314', password: '83r5^_', email: '', }}
+                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? 'mor_2314' : "", email: '', }}
                 onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
