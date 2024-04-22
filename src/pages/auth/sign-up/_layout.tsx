@@ -38,6 +38,9 @@ const SignUp = () => {
             if (!response) {
                 localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
                 localStorage.save(LocalStorageSaveKeys.password, values.password);
+                localStorage.save(LocalStorageSaveKeys.email, values.email);
+                localStorage.save(LocalStorageSaveKeys.birhDate, dateString);
+                localStorage.save(LocalStorageSaveKeys.gender, selectedGender);
                 navigation.navigate('KvkkPage');
             } else {
                 setServiceErrorText('Kullanıcı Adı Önceden Kayıtlı!');
@@ -59,7 +62,7 @@ const SignUp = () => {
         <View className="flex justify-center">
             <Formik
                 validationSchema={SignupSchema}
-                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? 'mor_2314' : "", email: '', }}
+                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? '83r5^_' : "", email: '', }}
                 onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
