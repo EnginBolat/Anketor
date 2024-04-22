@@ -17,18 +17,18 @@ class LocalStorage implements ILocalStorage {
 
   clearItem(key: string) {
     this.storage.delete(key);
-    console.log('Deleted')
+    if (__DEV__) { console.log('Deleted') }
   }
 
   //   Save
   save(key: string, data: any): void {
     this.storage.set(key, JSON.stringify(data));
-    console.log('Saved');
+    if (__DEV__) { console.log('Saved'); }
   }
 
   saveModel(key: string, data: any): void {
     this.storage.set(key, JSON.stringify(data));
-    console.log(`Saved: ${JSON.stringify(data)}`);
+    if (__DEV__) { console.log(`Saved: ${JSON.stringify(data)}`); }
   }
 
   //   Get
@@ -37,7 +37,7 @@ class LocalStorage implements ILocalStorage {
     const jsonData = this.storage.getString(key);
     if (jsonData) {
       const jsonObject = JSON.parse(jsonData);
-      console.log(`Readed Data: ${jsonData}`);
+      if (__DEV__) { console.log(`Readed Data: ${jsonData}`); }
       return jsonObject;
     }
   }
