@@ -41,18 +41,6 @@ const Profile = () => {
         { label: 'Kadın', value: 'Kadın' },
     ];
 
-    const renderLabel = () => {
-        if (value || isFocus) {
-            return (
-                <Text style={[isFocus && { color: 'blue' }]}>
-                    Dropdown label
-                </Text>
-            );
-        }
-        return null;
-    };
-
-
     function getUser() {
         var nickname = localStorage.get(LocalStorageSaveKeys.nickname);
         var email = localStorage.get(LocalStorageSaveKeys.email);
@@ -72,15 +60,20 @@ const Profile = () => {
     function takeQuestions() {
         if (filteredId) {
             const newQuestionsArray: any[] = [];
+            const uniqueQuestions: { [key: string]: boolean } = {};
             filteredId.forEach((x: any) => {
                 const data = questions.filter((y: any) => y.id === x);
-                if (data) {
+                if (data.length > 0) {
                     data.forEach((question: any) => {
                         const soru = localStorage.get(question.title);
                         if (soru) {
-                            newQuestionsArray.push(...soru);
                             soru.forEach((item: any) => {
-                                setStats(prevState => ({ ...prevState, totalPoint: prevState.totalPoint + parseInt(item.averagePoint) }));
+                                // Eğer soru daha önce eklenmediyse, uniqueQuestions objesine ekleyerek tekrar edenleri engelliyoruz
+                                if (!uniqueQuestions[item.title]) {
+                                    uniqueQuestions[item.title] = true;
+                                    newQuestionsArray.push(item);
+                                    setStats(prevState => ({ ...prevState, totalPoint: prevState.totalPoint + parseInt(item.averagePoint) }));
+                                }
                             });
                         } else {
                             console.warn('Veri bulunamadı.');
@@ -103,13 +96,13 @@ const Profile = () => {
     }, []);
 
     useEffect(() => {
-        takeQuestions();
         getUser();
         navigation.addListener('focus', () => {
             const storedFinishedQuestionsId = filteredId
             if (storedFinishedQuestionsId) {
                 setFinishedQuestionsId(storedFinishedQuestionsId);
             }
+            takeQuestions();
         });
     }, [navigation]);
 
