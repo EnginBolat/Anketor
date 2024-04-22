@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from 'yup';
 import { Formik } from "formik";
-import { HttpStatusCode } from "axios";
+import axios, { HttpStatusCode } from "axios";
 
 import { FormError, PrimaryButton, PrimaryInput } from "../../../components";
 import LocalStorage from "../../../core/service/local-storage/local.storage.service";
@@ -25,11 +25,23 @@ const SignIn = () => {
 
     const handleSubmit = async (values: any) => {
         setLoading(true);
+
         try {
-            await LoginService(values.nickname, values.password);
-            localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
-            localStorage.save(LocalStorageSaveKeys.password, values.password);
-            navigation.navigate('Home');
+            const response = await axios.post('https://fakestoreapi.com/auth/login', {
+                username: values.nickname,
+                password: values.password,
+            });
+            console.log(response)
+            if (response.status == 200) {
+                localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
+                localStorage.save(LocalStorageSaveKeys.password, values.password);
+                localStorage.save(LocalStorageSaveKeys.email, "test@gmail.com");
+                localStorage.save(LocalStorageSaveKeys.birhDate, "19.04.1972");
+                localStorage.save(LocalStorageSaveKeys.gender, "Erkek");
+                navigation.navigate('Home');
+            } else {
+                setServiceErrorText('Kullanıcı adı veya parola hatalı.');
+            }
         } catch (error: any) {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
                 setServiceErrorText('Kullanıcı adı veya parola hatalı.');
@@ -49,7 +61,7 @@ const SignIn = () => {
         <View className="flex justify-center">
             <Formik
                 validationSchema={SignupSchema}
-                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? 'mor_2314' : "", }}
+                initialValues={{ nickname: __DEV__ ? 'mor_2314' : "", password: __DEV__ ? '83r5^_' : "", }}
                 onSubmit={values => handleSubmit(values)}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
