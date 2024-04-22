@@ -129,7 +129,7 @@ const QuestionPage = (props: any) => {
             Alert.alert(`Cevaplarınız Kaydedildi\nToplam Geçen Süre: ${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`)
 
             // Kayıt işlemi başarılı ise sayfadan geri çık
-            // navigation.pop();
+            navigation.pop();
         } catch (error) {
             // Geliştiriciyi ve Kullanıcıyı bilgilendirecek logları göster
             console.error('LocalStorage\'a cevapları kaydetme hatası:', error);
