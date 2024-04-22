@@ -1,15 +1,14 @@
 
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { LanguageDetectorModule } from 'i18next';
+import { Platform, NativeModules } from 'react-native';
+import { en, tr } from '../../constants';
 
 export const languageResource = {
     en: { translation: en },
     tr: { translation: tr },
 };
-
-import { LanguageDetectorModule } from 'i18next';
-import { Platform, NativeModules } from 'react-native';
-import { en, tr } from '../../constants';
 
 const RNLanguageDetector: LanguageDetectorModule = {
     type: 'languageDetector',

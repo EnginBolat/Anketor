@@ -3,10 +3,12 @@ import { Animated, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { PrimaryButton, PrimaryInput } from '../../../components';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPassword = () => {
     const [showChangesSaved, setShowChangesSaved] = useState(false);
     const fadeAnim = useRef(new Animated.Value(0)).current;
+    const { t } = useTranslation();
 
     function startAnimated() {
         Animated.sequence([
@@ -42,10 +44,9 @@ const ForgotPassword = () => {
                 bounces={false}
                 contentContainerStyle={{ flex: 1 }}>
                 <View className='flex flex-1 p-5'>
-                    <Text className='text-black text-2xl font-Merriweather leading-8 font-normal'>Reset Password</Text>
+                    <Text className='text-black text-2xl font-Merriweather leading-8 font-normal'>{t('resetPasswordTitle')}</Text>
                     <Text className='text-gray-700 font-Inter text-sm leading-6 mt-2'>
-                        Enter the email address associated with your account, and we'll send
-                        you a link to reset your password.
+                        {t('resetPasswordDesc')}
                     </Text>
                     <Formik
                         initialValues={{ email: '', }}
@@ -62,7 +63,7 @@ const ForgotPassword = () => {
                                 {errors.email && touched.email ? <Text className='text-red-600 text-xs items-start text-left w-full pb-3'>{errors.email}
                                 </Text> : null}
                                 <PrimaryButton
-                                    title="Devam Et"
+                                    title={t('continue')}
                                     onPress={handleSubmit}
                                     titleStyle={{ fontWeight: '600' }}
                                 />
@@ -84,7 +85,7 @@ const ForgotPassword = () => {
                                 style={{
                                     color: '#009767',
                                 }}>
-                                Şifre sıfırlama maili gönderildi
+                                {t('resetPasswordMailSend')}
                             </Text>
                         </Animated.View>
                     )}

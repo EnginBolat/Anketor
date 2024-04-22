@@ -8,9 +8,11 @@ import { FormError, PrimaryButton, PrimaryInput } from "../../../components";
 import LocalStorage from "../../../core/service/local-storage/local.storage.service";
 import { LocalStorageSaveKeys } from "../../../constants";
 import { useNavigation } from "@react-navigation/native";
-import { LoginService } from "../../../core";
+import { useTranslation } from 'react-i18next';
+
 
 const SignIn = () => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false)
     const [serviceError, setServiceErrorText] = useState('')
     const localStorage = new LocalStorage();
@@ -31,7 +33,6 @@ const SignIn = () => {
                 username: values.nickname,
                 password: values.password,
             });
-            console.log(response)
             if (response.status == 200) {
                 localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
                 localStorage.save(LocalStorageSaveKeys.password, values.password);
@@ -40,13 +41,13 @@ const SignIn = () => {
                 localStorage.save(LocalStorageSaveKeys.gender, "Erkek");
                 navigation.navigate('Home');
             } else {
-                setServiceErrorText('Kullanıcı adı veya parola hatalı.');
+                setServiceErrorText(t('usernamePasswordError'));
             }
         } catch (error: any) {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
-                setServiceErrorText('Kullanıcı adı veya parola hatalı.');
+                setServiceErrorText(t('usernamePasswordError'));
             } else {
-                setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.');
+                setServiceErrorText(t('internalServerError'));
             }
         } finally {
             setLoading(false);
@@ -82,11 +83,11 @@ const SignIn = () => {
                             {errors.password && touched.password ? (<FormError error={errors.password} />) : <View />}
 
                             <TouchableOpacity onPress={handleForgetPassword} className={`${errors.password ? 'py-0' : 'p-2'}`}>
-                                <Text className="underline text-gray-600">Şifremi Unuttum</Text>
+                                <Text className="underline text-gray-600">{t("forgotPassword")}</Text>
                             </TouchableOpacity>
                         </View>
                         <PrimaryButton
-                            title="Giriş Yap"
+                            title={t('signIn')}
                             onPress={handleSubmit}
                             isLoading={loading}
                             titleStyle={{ fontWeight: '600' }}

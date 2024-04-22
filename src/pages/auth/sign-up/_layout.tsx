@@ -8,9 +8,10 @@ import { LocalStorage, LoginService } from "../../../core";
 import { LocalStorageSaveKeys } from "../../../constants";
 import { HttpStatusCode } from "axios";
 import DatePicker from "react-native-date-picker";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native"; import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
+    const { t } = useTranslation();
     const { height, width } = Dimensions.get('window');
     const [loading, setLoading] = useState(false)
     const [serviceError, setServiceErrorText] = useState('')
@@ -43,15 +44,13 @@ const SignUp = () => {
                 localStorage.save(LocalStorageSaveKeys.gender, selectedGender);
                 navigation.navigate('KvkkPage');
             } else {
-                setServiceErrorText('Kullanıcı Adı Önceden Kayıtlı!');
+                setServiceErrorText(t('userNamePreRegistered'));
             }
         } catch (error: any) {
             if (error.response && error.response.status === HttpStatusCode.Unauthorized) {
-                await LoginService(values.nickname, values.password);
-                localStorage.save(LocalStorageSaveKeys.nickname, values.nickname);
-                localStorage.save(LocalStorageSaveKeys.password, values.password);
+                setServiceErrorText(t('usernamePasswordError'));
             } else {
-                setServiceErrorText('Şu anda servislerimize bakım yapılıyor. Lütfen daha sonra tekrar deneyin.');
+                setServiceErrorText(t('internalServerError'));
             }
         } finally {
             setLoading(false);
@@ -69,19 +68,19 @@ const SignUp = () => {
                     <View className="p-5">
                         <View className="w-full justify-between flex-row mb-2">
                             <View style={{ width: width * 0.45 }}>
-                                <PrimaryButton onPress={() => { setselectedGender('Woman') }}
-                                    title="Kadın"
+                                <PrimaryButton onPress={() => { setselectedGender(t('woman')) }}
+                                    title={t('woman')}
                                     isWhite={true}
-                                    style={selectedGender == "Woman" ? { backgroundColor: 'pink' } : { backgroundColor: 'white' }}
-                                    titleStyle={selectedGender == "Woman" ? { color: 'white' } : { color: 'black' }}
+                                    style={selectedGender == t('woman') ? { backgroundColor: 'pink' } : { backgroundColor: 'white' }}
+                                    titleStyle={selectedGender == t('woman') ? { color: 'white' } : { color: 'black' }}
                                 />
                             </View>
                             <View style={{ width: width * 0.45 }}>
-                                <PrimaryButton onPress={() => { setselectedGender('Man') }}
-                                    title="Erkek"
+                                <PrimaryButton onPress={() => { setselectedGender(t('male')) }}
+                                    title={t('male')}
                                     isWhite={true}
-                                    style={selectedGender == "Man" ? { backgroundColor: '#4aabff' } : { backgroundColor: 'white' }}
-                                    titleStyle={selectedGender == "Man" ? { color: 'white' } : { color: 'black' }}
+                                    style={selectedGender == t('male') ? { backgroundColor: '#4aabff' } : { backgroundColor: 'white' }}
+                                    titleStyle={selectedGender == t('male') ? { color: 'white' } : { color: 'black' }}
                                 />
 
                             </View>
@@ -131,7 +130,7 @@ const SignUp = () => {
                             }}
                         />
                         <PrimaryButton
-                            title="Kayıt Ol"
+                            title={t('signUp')}
                             onPress={handleSubmit}
                             isLoading={loading}
                             titleStyle={{ fontWeight: '600' }}

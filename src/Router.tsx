@@ -13,7 +13,7 @@ function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Auth'>
+        <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />
           <Stack.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
           <Stack.Screen name="Question"
