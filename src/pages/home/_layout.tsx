@@ -47,20 +47,25 @@ const Home = () => {
         <SafeAreaView className="flex flex-1 ">
             <View className="flex flex-1 p-5 ">
                 <Text className="my-1 font-semibold text-xl">{`${t('homeGreetings')}${nickname ? `, ${nickname}` : ""}`}</Text>
-                <Text className="my-1 font-semibold text-lg pt-5">{t('polls')}</Text>
-                <FlatList
-                    className="flex flex-1"
-                    showsVerticalScrollIndicator={false}
-                    scrollEnabled={true}
-                    data={finishedQuestionsId ? filterQuestionsById(questions) : questions}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <AnketCard
-                            title={item.title}
-                            onPress={() => { navigation.navigate('Question', { testId: item.id }) }}
-                        />
-                    )}
-                />
+                {filterQuestionsById(questions) > 0 ? <View>
+                    <Text className="my-1 font-semibold text-lg pt-5">{t('polls')}</Text>
+                    <FlatList
+                        className="flex flex-1"
+                        showsVerticalScrollIndicator={false}
+                        scrollEnabled={true}
+                        data={finishedQuestionsId ? filterQuestionsById(questions) : questions}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <AnketCard
+                                title={item.title}
+                                onPress={() => { navigation.navigate('Question', { testId: item.id }) }}
+                            />
+                        )}
+                    />
+                </View> :
+                    <View className="flex-1 flex items-center justify-center">
+                        <Text>Çözebileceğiniz Başka Anket Kalmadı</Text>
+                    </View>}
             </View>
         </SafeAreaView>
     );

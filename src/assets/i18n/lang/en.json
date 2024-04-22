@@ -25,5 +25,9 @@
     "point": "Point",
     "haventsolvedPoll": "You haven't solved any polls yet",
     "profileInformations": "Profil Bilgileri",
-    "update": "Güncelle"
+    "update": "Güncelle",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "answersSaved": "Your Answers Saved\nTotal Elapsed Time:"
 }

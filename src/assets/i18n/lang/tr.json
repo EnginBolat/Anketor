@@ -25,5 +25,9 @@
     "point": "Puan",
     "haventsolvedPoll": "Henüz Herhangi Bir Test Çözmediniz",
     "profileInformations": "Profil Bilgileri",
-    "update": "Güncelle"
+    "update": "Güncelle",
+    "next": "İleri",
+    "back": "Geri",
+    "finish": "Bitir",
+    "answersSaved": "Cevaplarınız Kaydedildi\nToplam Geçen Süre:"
 }

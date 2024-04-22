@@ -11,12 +11,14 @@ import { IcClock } from '../../assets';
 import { useNavigation } from '@react-navigation/native';
 import { LocalStorageSaveKeys } from '../../constants';
 import { useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 interface RouteParams {
     testId: number;
 }
 
 const QuestionPage = (props: any) => {
+    const { t } = useTranslation();
     const { height, width } = Dimensions.get('window');
     const localStorage = new LocalStorage();
     const navigation = useNavigation<any>();
@@ -111,8 +113,6 @@ const QuestionPage = (props: any) => {
                 test: mainQuestion
             }));
 
-            console.log(`Model Preview: ${saveModels}`)
-
             // Kaydedilen Testin Idsini kaydet
             var idList = localStorage.get(LocalStorageSaveKeys.finishedQuestionsId);
             if (!idList) { idList = []; }
@@ -121,18 +121,17 @@ const QuestionPage = (props: any) => {
 
             // Kaydedilen Testin Modelini Kaydet
             localStorage.saveModel(questions.filter((x) => x.id === testId)[0].title, saveModels);
-            console.warn(`Veri tabanına kaydedilen başlık:${questions.filter((x) => x.id === testId)[0].title}`)
-            console.warn(`Veri tabanına kaydedilen içerik:${saveModels}`)
-
             // Geliştiriciyi ve Kullanıcıyı bilgilendirecek logları göster
-            console.log('Cevaplar başarıyla localStorage\'a kaydedildi.');
-            Alert.alert(`Cevaplarınız Kaydedildi\nToplam Geçen Süre: ${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`)
+            if (__DEV__) {
+                console.warn(`Veri tabanına kaydedilen başlık:${questions.filter((x) => x.id === testId)[0].title}`)
+                console.warn(`Veri tabanına kaydedilen içerik:${saveModels}`)
+                console.log('Cevaplar başarıyla localStorage\'a kaydedildi.');
+            }
 
-            // Kayıt işlemi başarılı ise sayfadan geri çık
+            Alert.alert(`${t('answersSaved')} ${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`)
             navigation.pop();
         } catch (error) {
-            // Geliştiriciyi ve Kullanıcıyı bilgilendirecek logları göster
-            console.error('LocalStorage\'a cevapları kaydetme hatası:', error);
+            if (__DEV__) { console.error('LocalStorage\'a cevapları kaydetme hatası:', error); }
             Alert.alert(`Cevaplarınız Kaydedilirken bir sorun ile karşılaşıldı`)
         }
     };
@@ -210,16 +209,18 @@ const ControlButtons: React.FC<{ handlePrevButton: () => void, handleNextButton:
     handleFinishButton,
     activeIndex,
 }) => {
+    const { t } = useTranslation();
+
     return <View className='justify-between flex-row p-5'>
         <PrimaryButton
-            title='Geri'
+            title={t('back')}
             onPress={handlePrevButton}
             style={{ width: Dimensions.get('window').width * 0.45 }}
             isWhite={true}
         />
         <View className='mr-1' />
         <PrimaryButton
-            title={activeIndex >= 9 ? 'Bitir' : 'İler'}
+            title={activeIndex >= 9 ? t('finish') : t('next')}
             onPress={() => {
                 activeIndex >= 9 ? handleFinishButton() : handleNextButton()
             }}
@@ -269,15 +270,18 @@ const MultipleChoicePage: React.FC<{
 
 
 const OpenEndedQuestionPage: React.FC<{ question2: OpenEndedQuestionModel, handleAnswer: (answer: string) => void }> = ({ question2, handleAnswer }) => {
-    const [answer, setAnswer] = useState('');
+    const [answer2, setAnswer2] = useState('');
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', padding: 20, width: Dimensions.get('window').width }}>
             <Text className='font-semibold text-lg text-center mb-5'>{question2.question}</Text>
             <PrimaryInput
                 placeholder='Cevabınızı buraya yazın'
-                setValue={(text: any) => setAnswer(text)}
-                value={answer}
+                setValue={(text: any) => {
+                    setAnswer2(text);
+                    handleAnswer(answer2);
+                }}
+                value={answer2}
                 maxLength={200}
             />
         </View>
@@ -295,6 +299,7 @@ const ScaleQuestionPage: React.FC<{ question2: ScaleQuestionModel, handleAnswer:
     const onSlidingComplete = (e: number) => {
         console.log('onSlidingComplete', parseInt(e.toString(), 10));
         isScrubbing.current = false;
+        handleAnswer(parseInt(e.toString(), 10).toString())
     };
 
     const onSlidingStart = () => {
