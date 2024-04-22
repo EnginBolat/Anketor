@@ -8,6 +8,7 @@ import questions from '../../utils/questions.json';
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import DatePicker from "react-native-date-picker";
 import { Dropdown } from 'react-native-element-dropdown';
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
     const localStorage = new LocalStorage();
@@ -35,10 +36,21 @@ const Profile = () => {
     const [date, setDate] = useState(new Date());
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
+    const { t, i18n } = useTranslation();
+
+    const changeLanguageHandler = () => {
+        if (i18n.language == "tr") {
+            i18n.changeLanguage("en")
+        } else {
+            i18n.changeLanguage("tr")
+        }
+    }
+
+
 
     const genders = [
-        { label: 'Erkek', value: 'Erkek' },
-        { label: 'Kadın', value: 'Kadın' },
+        { label: t('male'), value: t('male') },
+        { label: t('woman'), value: t('woman') },
     ];
 
     function getUser() {
@@ -119,7 +131,7 @@ const Profile = () => {
             localStorage.save(LocalStorageSaveKeys.gender, user.gender);
             localStorage.save(LocalStorageSaveKeys.password, user.password);
         } catch (error) {
-            Alert.alert('Bir daha oluştu, lütfen daha sonra tekrar deneyin.')
+            Alert.alert(t('someThingsHappenedPleaseTryAgain'))
         }
         setIsProcessOngoing(false);
     }
@@ -133,14 +145,14 @@ const Profile = () => {
                 <View>
                     <Text className="ml-2 text-lg">{user.nickname.length > 9 ? user.nickname.substring(0, 8) + '...' : user.nickname}</Text>
                     <TouchableOpacity onPress={handlePresentModalPress}>
-                        <Text className="ml-2 text-sm underline">Profili Düzenle</Text>
+                        <Text className="ml-2 text-sm underline">{t('editProfile')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             <View className="flex-row justify-between py-5">
-                <InformationCol title="Puan" value={stats.totalPoint.toString() ?? "0"} />
+                <InformationCol title={t('point')} value={stats.totalPoint.toString() ?? "0"} />
                 <View className="w-0.5 mx-3 bg-gray-500 h-13" />
-                <InformationCol title="Toplam" value={stats.totalTest} />
+                <InformationCol title={t('total')} value={stats.totalTest} />
             </View>
         </View>
     }
@@ -171,14 +183,14 @@ const Profile = () => {
                             />)
                             : (
                                 <View className="flex flex-1 justify-center items-center">
-                                    <Text className="text-xl font-bold text-gray-400">Henüz Herhangi Bir Test Çözmediniz</Text>
+                                    <Text className="text-xl font-bold text-gray-400">{t('haventsolvedPoll')}</Text>
                                 </View>
                             )}
                     </View>
                 ) : <View className="flex flex-1 p-5">
                     {headerComponent()}
                     <View className="flex flex-1 justify-center items-center">
-                        <Text className="text-xl font-bold text-gray-400">Henüz Herhangi Bir Test Çözmediniz</Text>
+                        <Text className="text-xl font-bold text-gray-400">{t('haventsolvedPoll')}</Text>
                     </View>
                 </View>}
                 <BottomSheetModal
@@ -194,7 +206,7 @@ const Profile = () => {
                             horizontal={false}
                             showsVerticalScrollIndicator={false}
                         >
-                            <Text className="text-xl font-bold color-black mb-2">Profil Bilgileri</Text>
+                            <Text className="text-xl font-bold color-black mb-2">{t('profileInformations')}</Text>
                             <BottomSheetInput
                                 initialValue={user.nickname}
                                 placeHolder="Nickname"

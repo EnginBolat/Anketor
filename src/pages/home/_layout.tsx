@@ -5,8 +5,10 @@ import { LocalStorageSaveKeys } from "../../constants";
 import { AnketCard } from "../../components";
 import { useNavigation } from "@react-navigation/native";
 import questions from '../../utils/questions.json';
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
+    const { t } = useTranslation();
     const localStorage = new LocalStorage();
     const nickname = localStorage.get(LocalStorageSaveKeys.nickname);
     const navigation = useNavigation<any>();
@@ -44,8 +46,8 @@ const Home = () => {
     return (
         <SafeAreaView className="flex flex-1 ">
             <View className="flex flex-1 p-5 ">
-                <Text className="my-1 font-semibold text-xl">{`Hoşgeldin ${nickname ? `,${nickname}` : ""}`}</Text>
-                <Text className="my-1 font-semibold text-lg pt-5">{`Anketler`}</Text>
+                <Text className="my-1 font-semibold text-xl">{`${t('homeGreetings')}${nickname ? `, ${nickname}` : ""}`}</Text>
+                <Text className="my-1 font-semibold text-lg pt-5">{t('polls')}</Text>
                 <FlatList
                     className="flex flex-1"
                     showsVerticalScrollIndicator={false}
